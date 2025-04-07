@@ -1,0 +1,105 @@
+
+
+%% 定数マトリクス組立
+h = waitbar(0,'Creating Matrixes...'); 
+
+%%三角要素の面積計算
+for i=1:1:ELEM_NUM_max;
+    S(i,1) = 1/2*det([1 Node_xy(Elem_num(i,1),1) Node_xy(Elem_num(i,1),2);
+            1 Node_xy(Elem_num(i,2),1) Node_xy(Elem_num(i,2),2);
+            1 Node_xy(Elem_num(i,3),1) Node_xy(Elem_num(i,3),2)]);
+end
+
+FEM_b1 = (Node_xy(Elem_num(1:1:ELEM_NUM_max,2),2) - Node_xy(Elem_num(1:1:ELEM_NUM_max,3),2));
+FEM_b2 = (Node_xy(Elem_num(1:1:ELEM_NUM_max,3),2) - Node_xy(Elem_num(1:1:ELEM_NUM_max,1),2));
+FEM_b3 = (Node_xy(Elem_num(1:1:ELEM_NUM_max,1),2) - Node_xy(Elem_num(1:1:ELEM_NUM_max,2),2));
+FEM_c1 = (-Node_xy(Elem_num(1:1:ELEM_NUM_max,2),1) + Node_xy(Elem_num(1:1:ELEM_NUM_max,3),1));
+FEM_c2 = (-Node_xy(Elem_num(1:1:ELEM_NUM_max,3),1) + Node_xy(Elem_num(1:1:ELEM_NUM_max,1),1));
+FEM_c3 = (-Node_xy(Elem_num(1:1:ELEM_NUM_max,1),1) + Node_xy(Elem_num(1:1:ELEM_NUM_max,2),1));
+
+
+%% 慣性項マトリックス
+for i=1:ELEM_NUM_max
+    FEM_M_mat(:,:,i) = 2*S(i)/720*[12 -2 -2 0 -8 0;
+                                   -2 12 -2 0 0 -8;
+                                   -2 -2 12 -8 0 0;
+                                   0 0 -8 64 32 32;
+                                   -8 0 0 32 64 32;
+                                   0 -8 0 32 32 64];
+
+                      
+%% 拡散項マトリクス
+
+    FEM_B_mat(:,:,i) = [3*FEM_b1(i) -FEM_b1(i) -FEM_b1(i);
+                        -FEM_b2(i) 3*FEM_b2(i) -FEM_b2(i);
+                        -FEM_b3(i) -FEM_b3(i) 3*FEM_b3(i);
+                        4*FEM_b2(i) 4*FEM_b1(i) 0;
+                        0 4*FEM_b3(i) 4*FEM_b2(i);
+                        4*FEM_b3(i) 0 4*FEM_b1(i)]';        
+
+    FEM_C_mat(:,:,i) = [3*FEM_c1(i) -FEM_c1(i) -FEM_c1(i);
+                        -FEM_c2(i) 3*FEM_c2(i) -FEM_c2(i);
+                        -FEM_c3(i) -FEM_c3(i) 3*FEM_c3(i);
+                        4*FEM_c2(i) 4*FEM_c1(i) 0;
+                        0 4*FEM_c3(i) 4*FEM_c2(i);
+                        4*FEM_c3(i) 0 4*FEM_c1(i)]';        
+
+    FEM_D_mat = S(i)/12*[2 1 1;
+                         1 2 1
+                         1 1 2];     
+                     
+    FEM_K_mat(:,:,i) = nu*( squeeze(FEM_B_mat(:,:,i))'*FEM_D_mat*squeeze(FEM_B_mat(:,:,i))...
+                            + squeeze(FEM_C_mat(:,:,i))'*FEM_D_mat*squeeze(FEM_C_mat(:,:,i)) );                        
+
+
+%% 圧力項マトリックス
+
+    FEM_Hx_mat(:,:,i) = S(i)/(3*rho)*[0 0 0;
+                                      0 0 0;
+                                      0 0 0
+                                      FEM_b1(i) FEM_b2(i) FEM_b3(i);
+                                      FEM_b1(i) FEM_b2(i) FEM_b3(i);
+                                      FEM_b1(i) FEM_b2(i) FEM_b3(i)];
+                                  
+    FEM_Hy_mat(:,:,i) = S(i)/(3*rho)*[0 0 0;
+                                      0 0 0;
+                                      0 0 0
+                                      FEM_c1(i) FEM_c2(i) FEM_c3(i);
+                                      FEM_c1(i) FEM_c2(i) FEM_c3(i);
+                                      FEM_c1(i) FEM_c2(i) FEM_c3(i)];
+                           
+
+%% 対流項構成マトリクス
+
+    FEM_Slmn_mat(:,:,1,i) = 2*S(i)/5040*[120 12  12  24  6   24;
+                                         12  24  4   12  6   4;
+                                         12  4   24  4   6   12;
+                                         24  12  4   12  4   6;
+                                         6   6   6   4   4   4;
+                                         24  4   12  6   4   12];
+                            
+	FEM_Slmn_mat(:,:,2,i) = 2*S(i)/5040*[24  12  4   12  4   6;
+                                         12  120 12  24  24  6;
+                                         4   12  24  4   12  6;
+                                         12  24  4   12  6   4;
+                                         4   24  12  6   12  4;
+                                         6   6   6   4   4   4];
+                            
+	FEM_Slmn_mat(:,:,3,i) = 2*S(i)/5040*[24  4   12  6   4   12;
+                                         4   24  12  6   12  4;
+                                         12  12  120 6   24  24;
+                                         6   6   6   4   4   4;
+                                         4   12  24  4   12  6;
+                                         12  4   24  4   6   12];  
+    
+    waitbar(i/ELEM_NUM_max);                         
+end
+
+FEM_F_mat = [1 0 0 -1 0 -1;
+             0 1 0 -1 -1 0;
+             0 0 1 0 -1 -1;
+             -1 -1 0 4 0 0;
+             0 -1 -1 0 4 0;
+             -1 0 -1 0 0 4];
+
+close(h);

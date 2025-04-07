@@ -1,0 +1,43 @@
+%% ‘Î—¬€‚Ì‘g—§
+
+global FEM_phi_b FEM_phi_c
+
+%%‚‘¬‰»‚Ì‚½‚ß‚Ì—\”õéŒ¾
+FEM_phi_b = zeros(6,6,6,ELEM_NUM_max);
+FEM_phi_c = zeros(6,6,6,ELEM_NUM_max);
+
+
+% > But how about constructing an array of higher dimension? 
+% For example,
+% > 
+% > A3(:,:,:) = ? given a1 = rand(3,1), a2 = rand(2,1) and a3 
+% = rand(4,1)?
+% > 
+% >   Thanks,
+% 
+% A3=kron( kron(a3,a2),     a1 );
+% 
+% A3=reshape(A3,3,2,4);
+
+h = waitbar(0,'Creating Convective term...'); 
+for n=1:ELEM_NUM_max
+%     for i=1:6
+%         for j=1:6
+%             for k=1:6
+%                 mat_buf = reshape(kron(kron(FEM_B_mat(:,k,n),FEM_F_mat(j,:)'),FEM_F_mat(i,:)'),6,6,3);
+%                 FEM_phi_b(i,j,k,n) = sum(sum(sum(mat_buf.*FEM_Slmn_mat(:,:,:,n))));
+%                 mat_buf = reshape(kron(kron(FEM_C_mat(:,k,n),FEM_F_mat(j,:)'),FEM_F_mat(i,:)'),6,6,3);
+%                 FEM_phi_c(i,j,k,n) = sum(sum(sum(mat_buf.*FEM_Slmn_mat(:,:,:,n))));
+%             end
+%         end
+%     end
+
+    
+    
+    if mod(n,100) == 0
+        waitbar(n/ELEM_NUM_max); 
+    end
+end
+close(h);
+
+clear FEM_Slmn_mat

@@ -1,0 +1,40 @@
+%% SUPGägéUçÄåWêîÉeÉìÉ\ÉãçÏê¨
+
+global FEM_T_bb FEM_T_bc FEM_T_cb FEM_T_cc
+
+
+%%çÇë¨âªÇÃÇΩÇﬂÇÃó\îıêÈåæ
+FEM_T_bb = zeros(6,6,6,ELEM_NUM_max);
+FEM_T_bc = zeros(6,6,6,ELEM_NUM_max);
+FEM_T_cb = zeros(6,6,6,ELEM_NUM_max);
+FEM_T_cc = zeros(6,6,6,ELEM_NUM_max);
+
+
+h = waitbar(0,'Creating SUPG Convective term...'); 
+for n=1:ELEM_NUM_max
+
+    t_tens = tensor(squeeze(T_tensor(:,:,n)));
+    fem_f_mat = FEM_F_mat(:,:) ;
+    fem_b_mat = squeeze(FEM_B_mat(:,:,n)) ;
+    fem_c_mat = squeeze(FEM_C_mat(:,:,n)) ;
+    fem_b_vec = squeeze(FEM_b_vec(:,n)) ;
+    fem_c_vec = squeeze(FEM_c_vec(:,n)) ;
+    
+    fem_B_b = fem_B_mat*fem_b_vec;
+    fem_C_c = fem_C_mat*fem_c_vec;
+    
+    %%ttt:outer product aij*bkl =
+    FEM_T_bb(:,:,:,n) = ttt(ttm( t_tens, {fem_f_mat, fem_b_mat', fem_b_mat}, [ 1 2]));
+    FEM_T_bc(:,:,:,n) = ttt(ttm( t_tens, {fem_f_mat, fem_b_mat', fem_c_mat}, [ 1 2]));
+    FEM_T_cb(:,:,:,n) = ttt(ttm( t_tens, {fem_f_mat, fem_c_mat', fem_b_mat}, [ 1 2]));
+    FEM_T_cc(:,:,:,n) = ttt(ttm( t_tens, {fem_f_mat, fem_c_mat', fem_c_mat}, [ 1 2]));
+    
+    if mod(n,100) == 0
+        waitbar(n/ELEM_NUM_max); 
+    end
+end
+
+
+close(h);
+
+clear t_tens

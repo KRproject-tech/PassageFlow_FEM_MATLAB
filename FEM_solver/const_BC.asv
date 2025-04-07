@@ -1,0 +1,58 @@
+%% B.C.åvéZ
+
+%% B.C.(íËêîïîï™)
+GLOBAL_MATRIX_NUM = 2*NEW_NODE_NUM_max + NODE_NUM_max;
+
+%% çÑê´çsóÒÇÃëŒäpê¨ï™
+hG_K = sparse(GLOBAL_MATRIX_NUM,GLOBAL_MATRIX_NUM);
+diag_elem = [hold_num_v(:); NEW_NODE_NUM_max+hold_num_v(:);
+            hold_num_v2(:); NEW_NODE_NUM_max+hold_num_v2(:);
+            2*NEW_NODE_NUM_max+hold_num(:)];
+        
+hG_K = hG_K + diag(eye(diag_elem'));
+
+
+%%%%%%%%%%%%%%%%%%%%%%ó¨ì¸ÇÃã´äEèåè
+G_M(hold_num_v(:),:) = 0;%u
+G_M(NEW_NODE_NUM_max+hold_num_v(:),:) = 0;%v
+
+G_KL(hold_num_v(:),:) = 0;%u
+% hG_K = sparse(GLOBAL_MATRIX_NUM,GLOBAL_MATRIX_NUM);
+% hG_K(hold_num_v(:),hold_num_v(:)) = 1;
+% G_KL = G_KL + diag(diag(hG_K));
+
+G_KL(NEW_NODE_NUM_max+hold_num_v(:),:) = 0;%v
+% hG_K = sparse(GLOBAL_MATRIX_NUM,GLOBAL_MATRIX_NUM);
+% hG_K(NEW_NODE_NUM_max+hold_num_v(:),NEW_NODE_NUM_max+hold_num_v(:)) = 1;
+% G_KL = G_KL + diag(diag(hG_K));
+
+G_F(hold_num_v(:),1) = u_w;%u
+G_F(NEW_NODE_NUM_max + hold_num_v(:),1) = v_w;%v
+
+%%%%%%%%%%%%%%%%%%%%%%ì‡ïîï®ëÃÇÃë¨ìxã´äEèåè
+G_M(hold_num_v2(:),:) = 0;%u
+G_M(NEW_NODE_NUM_max+hold_num_v2(:),:) = 0;%v
+
+G_KL(hold_num_v2(:),:) = 0;%u
+% hG_K = sparse(GLOBAL_MATRIX_NUM,GLOBAL_MATRIX_NUM);
+% hG_K(hold_num_v2(:),hold_num_v2(:)) = 1;
+% G_KL = G_KL + diag(diag(hG_K));
+
+G_KL(NEW_NODE_NUM_max+hold_num_v2(:),:) = 0;%v 
+% hG_K = sparse(GLOBAL_MATRIX_NUM,GLOBAL_MATRIX_NUM);
+% hG_K(NEW_NODE_NUM_max+hold_num_v2(:),NEW_NODE_NUM_max+hold_num_v2(:)) = 1;
+% G_KL = G_KL + diag(diag(hG_K));
+
+G_F(hold_num_v2(:),1) = u_w_obj;%u
+G_F(NEW_NODE_NUM_max + hold_num_v2(:),1) = v_w_obj;%v
+
+%%%%%%%%%%%%%%%%%%%%%%ó¨èoÇÃã´äEèåè(p=0)
+G_M(2*NEW_NODE_NUM_max + hold_num(:),:) = 0;
+
+G_KL(2*NEW_NODE_NUM_max + hold_num(:),:) = 0;
+% hG_K = sparse(GLOBAL_MATRIX_NUM,GLOBAL_MATRIX_NUM);
+% hG_K(2*NEW_NODE_NUM_max + hold_num(:),2*NEW_NODE_NUM_max + hold_num(:)) = 1;
+G_KL = G_KL + hG_K;  
+
+G_F(2*NEW_NODE_NUM_max + hold_num(:),1) = 0;
+

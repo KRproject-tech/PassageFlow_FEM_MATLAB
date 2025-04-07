@@ -1,0 +1,11 @@
+function fmg_Kc_mat = FMG_Kc_mat()
+%% 対流項計算(グローバル変数)
+
+%%Global matrix
+for i=1:1:ELEM_NUM_max;
+
+    %%対流項
+    femFEM_Kc_mat(u,v,i);
+    
+    fmg_Kc_mat(Elem_num(i,1:6),Elem_num(i,1:6)) = fmg_Kc_mat(Elem_num(i,1:6),Elem_num(i,1:6)) + ;
+end
