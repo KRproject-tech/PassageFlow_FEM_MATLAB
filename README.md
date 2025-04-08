@@ -27,11 +27,17 @@ Unzip the tensor toolbox to use this code.
 
 ## Mesh examples
 
+__Mesh: Fluid.VOR__
+
 Mesh is genarated by voro315.exe
 https://www.vector.co.jp/soft/win95/edu/se060930.html?ds
 
-Mesh: Fluid.VOR
 ![untitled](https://github.com/user-attachments/assets/1828a627-ce98-43f5-943f-508a128642d1)
+
+
+__Flow & pressure fields__
+
+![untitled](https://github.com/user-attachments/assets/8e475257-577b-428b-bc2d-3af18492d26f)
 
 
 ## License
