@@ -29,5 +29,4 @@ Unzip the tensor toolbox to use this code.
 Mesh: Fluid.VOR
 ![untitled](https://github.com/user-attachments/assets/1828a627-ce98-43f5-943f-508a128642d1)
 
-Mesh: Fluid3.VOR
 
