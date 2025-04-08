@@ -30,3 +30,10 @@ Mesh: Fluid.VOR
 ![untitled](https://github.com/user-attachments/assets/1828a627-ce98-43f5-943f-508a128642d1)
 
 
+## License
+
+MIT License
+
+## Contributing
+
+Issue reports and pull requests are highly welcomed.
