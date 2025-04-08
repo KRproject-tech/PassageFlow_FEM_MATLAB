@@ -6,7 +6,7 @@
 A test code of FEM-CFD with the SUPG method.
 The 2nd-order triangular element is employed.
 
-Unzip the tensor toolbox.
+Unzip the tensor toolbox to use this code.
 
 ![License](https://img.shields.io/github/license/yuki-koyama/elasty)
 <img src="https://img.shields.io/badge/Matlab-%3E%3D%202007b%20-blue.svg" alt="Matlab">
@@ -25,5 +25,9 @@ Unzip the tensor toolbox.
 <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/matlab/matlab-original.svg" width="60"/>
 <p>
 
-**Mesh example**
+## Mesh examples
+Mesh: Fluid.VOR
 ![untitled](https://github.com/user-attachments/assets/1828a627-ce98-43f5-943f-508a128642d1)
+
+Mesh: Fluid3.VOR
+
